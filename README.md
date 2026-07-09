@@ -218,7 +218,7 @@ Mediana e p90 da primeira resposta, leads sem resposta e receita em risco.
 Score 0–100 com racional explícito — útil para priorizar atendimento humano.
 
 ### Lost Reasons
-Agregação dos motivos de perda para corrigir processo (não só “ Culpar o lead”).
+Agregação dos motivos de perda para corrigir processo (não só “culpar o lead”).
 
 ### Weekly Report
 Highlights semanais prontos para dono do negócio ou reporting de agência.
