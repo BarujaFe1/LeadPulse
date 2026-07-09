@@ -53,3 +53,7 @@ temp/
 # Uploaded user data (keep seed only)
 data/uploads/
 !data/seed/
+
+.vercel/
+apps/web/.vercel/
+apps/web/.env*.local

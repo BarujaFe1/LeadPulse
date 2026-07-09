@@ -82,12 +82,17 @@ export default function HomePage() {
   return (
     <main>
       <header className="hero">
-        <div className="brand">LeadPulse</div>
+        <div className="brand">LeadPulse · Lab demo</div>
         <h1>Cockpit de follow-up para quem vende no WhatsApp</h1>
         <p>
           Transforme conversas soltas em funil, tempo de resposta, leads
           esquecidos e tarefas priorizadas — sem virar um CRM corporativo
           pesado.
+        </p>
+        <p className="muted">
+          Snapshot sintético de 12 leads (WhatsApp / Instagram / formulário).
+          KPIs e opportunity score são do lab — não métricas de produção nem
+          integração oficial com WhatsApp.
         </p>
       </header>
 

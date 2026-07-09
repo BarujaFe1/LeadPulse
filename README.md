@@ -30,6 +30,14 @@
   <img src="./assets/hero-cover.png" alt="LeadPulse product overview" width="100%" />
 </p>
 
+<p align="center">
+  <a href="https://leadpulse-umber.vercel.app"><strong>🌐 Live Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/BarujaFe1/LeadPulse"><strong>GitHub</strong></a>
+</p>
+
+> **Live demo note:** the public Vercel lab runs a **frontend-first** follow-up cockpit in the browser (12 synthetic WhatsApp/Instagram/form leads). KPIs, forgotten-lead rules and opportunity score are from the demo snapshot — **not** production metrics. The FastAPI package remains available for local/API workflows. No unofficial WhatsApp scraping.
+
 ---
 
 ## 1. Visão Geral / Overview
@@ -311,9 +319,12 @@ Dashboard + Weekly Highlights
 
 ## 🚀 Quick Start / Início Rápido
 
+### Live Demo
+Abra o lab publicado: **[https://leadpulse-umber.vercel.app](https://leadpulse-umber.vercel.app)**
+
 ### Pré-requisitos
 - **Node.js** v20 ou superior
-- **Python** v3.10+ (preferencialmente 3.12)
+- **Python** v3.10+ (preferencialmente 3.12) — opcional para o stack local com FastAPI
 - **Git**
 
 ### Opção 1 — Execução integrada no Windows
@@ -342,6 +353,8 @@ npm install
 npm run dev
 ```
 *Frontend em [http://localhost:3000](http://localhost:3000).*
+
+Sem `NEXT_PUBLIC_API_URL`, o frontend usa o **engine client-side** (mesmo snapshot da demo Vercel). Com a API local, defina `NEXT_PUBLIC_API_URL=http://127.0.0.1:8000`.
 
 ---
 
