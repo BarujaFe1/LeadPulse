@@ -1,0 +1,13 @@
+id,name,channel,stage,owner,source,created_at,first_response_minutes,last_touch_at,next_follow_up_at,opportunity_score,estimated_revenue,temperature,lost_reason,notes,tags
+L-001,Ana Clínica Estética,whatsapp,qualified,Mariana,instagram_dm,2026-07-01T10:12:00,18,2026-07-07T09:00:00,2026-07-09T11:00:00,86,2400,hot,,Pediu orçamento de pacote facial e sumiu após áudio.,hot;follow-up
+L-002,Bruno Imóveis Centro,instagram,proposal,Carlos,instagram_form,2026-06-28T15:40:00,42,2026-07-06T18:20:00,2026-07-08T16:00:00,78,5200,hot,,Visitou 2 imóveis; aguarda contraproposta.,proposal;high-ticket
+L-003,Curso UX Intensivo,form,contacted,Mariana,landing_form,2026-07-05T08:05:00,95,2026-07-05T09:40:00,2026-07-09T09:30:00,61,997,warm,,Perguntou parcelamento e não respondeu.,course;slow-response
+L-004,Escola Bilíngue Norte,whatsapp,new,Carlos,whatsapp_status,2026-07-08T19:10:00,,2026-07-08T19:10:00,2026-07-09T08:00:00,72,3600,hot,,Lead novo sem primeira resposta.,forgotten;critical
+L-005,Studio Pilates Sul,whatsapp,lost,Mariana,referral,2026-06-20T11:00:00,210,2026-06-27T14:00:00,,20,1800,cold,demora_no_retorno,Fechou com concorrente após 3 dias sem follow-up.,lost;response-sla
+L-006,Clínica Odontológica Vida,instagram,qualified,Ana,instagram_ads,2026-07-02T13:22:00,12,2026-07-08T10:15:00,2026-07-10T10:00:00,81,4100,hot,,Quer agenda para avaliação esta semana.,hot;booking
+L-007,Agência Tráfego Local,form,proposal,Carlos,agency_partner,2026-06-30T09:00:00,27,2026-07-07T17:45:00,2026-07-09T15:00:00,74,8900,warm,,Multi-cliente: 4 negócios locais no pipeline.,agency;multi-client
+L-008,Loja Moda Outlet,whatsapp,contacted,Ana,whatsapp_catalog,2026-07-04T16:50:00,65,2026-07-04T18:00:00,2026-07-09T12:00:00,48,650,warm,,Pediu preço e sumiu.,price-ask;follow-up
+L-009,Consultoria Contábil PME,manual,won,Mariana,manual_entry,2026-06-15T10:00:00,8,2026-06-25T11:00:00,,95,3200,hot,,Fechou plano mensal após 2 follow-ups.,won;playbook
+L-010,Pet Shop Jardins,whatsapp,lost,Carlos,instagram_dm,2026-06-22T20:00:00,340,2026-06-24T09:00:00,,15,900,cold,preco,Achou caro após demora na resposta.,lost;price
+L-011,Academia Fit Night,instagram,new,Ana,instagram_form,2026-07-08T21:30:00,,2026-07-08T21:30:00,2026-07-09T07:30:00,69,1290,warm,,Formulário noturno sem atendimento.,forgotten;after-hours
+L-012,Salão Beauty Prime,whatsapp,qualified,Mariana,referral,2026-07-03T12:10:00,22,2026-07-07T13:00:00,2026-07-09T14:00:00,77,2100,hot,,Quer pacote mensal para equipe.,hot;b2b
