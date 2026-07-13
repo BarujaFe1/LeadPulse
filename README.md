@@ -3,7 +3,7 @@
 **WhatsApp-first follow-up radar for SMB sales teams** — response-time KPIs, forgotten leads, opportunity scoring and weekly commercial highlights.
 
 <p align="center">
-  <a href="https://leadpulse-umber.vercel.app"><strong>🌐 Live Demo</strong></a>
+  <a href="https://leadpulse-two.vercel.app"><strong>🌐 Live Demo</strong></a>
   &nbsp;·&nbsp;
   <a href="https://github.com/BarujaFe1/LeadPulse"><strong>GitHub</strong></a>
 </p>
@@ -38,9 +38,12 @@ LeadPulse is a **light ops cockpit**, not a heavy CRM:
 - **Follow-up radar** — critical/high/medium/low queue
 - **Response dashboard** — median / p90 first response, unanswered, at-risk revenue
 - **Simple funnel** — new → contacted → qualified → proposal → won/lost
-- **Opportunity classify** — intent + channel + silence with rationale
+- **Opportunity classify** — intent + channel + silence with rationale (**heuristic, not AI/LLM**)
 - **Lost reasons** — process feedback, not “blame the lead”
 - **Weekly report** — computed from the same snapshot (no invented metrics)
+- **Scoring methodology panel** — transparent rule card in the UI
+
+Methodology details: [docs/SCORING.md](./docs/SCORING.md) · Interview demo: [docs/DEMO_SCRIPT.md](./docs/DEMO_SCRIPT.md)
 
 ---
 
@@ -68,7 +71,7 @@ Details: [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) · [docs/TECHNICAL_DECIS
 ## Quick start
 
 ### Live demo
-https://leadpulse-umber.vercel.app
+https://leadpulse-two.vercel.app
 
 ### Frontend only (same mode as Vercel)
 

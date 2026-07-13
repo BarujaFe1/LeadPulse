@@ -350,10 +350,26 @@ textarea:focus-visible {
   outline-offset: 2px;
 }
 
+.method-list {
+  margin: 0.35rem 0 0.75rem;
+  padding-left: 1.2rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.method-list strong {
+  color: var(--text);
+}
+
+.methodology {
+  margin-top: 0.25rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .skeleton-card,
   .skeleton-panel {
     animation: none;
   }
 }
+
 

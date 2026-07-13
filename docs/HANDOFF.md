@@ -2,7 +2,7 @@
 
 **Branch:** `chore/portfolio-quality-pass`  
 **Date:** 2026-07-13  
-**Live demo (unchanged):** https://leadpulse-umber.vercel.app
+**Live demo (unchanged):** https://leadpulse-two.vercel.app
 
 ---
 

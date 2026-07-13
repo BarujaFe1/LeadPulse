@@ -23,7 +23,7 @@ LeadPulse is a **WhatsApp-first SMB follow-up lab**: Next.js cockpit + optional 
 | API | FastAPI + Pydantic + CSV seed (optional for local) |
 | Demo mode | Client engine in `apps/web/lib/engine.ts` (no Python on Vercel) |
 | Data | `data/seed/whatsapp_leads_demo.csv` + mirrored TS seed |
-| Deploy | Vercel project `leadpulse` → https://leadpulse-umber.vercel.app |
+| Deploy | Vercel project `leadpulse` → https://leadpulse-two.vercel.app |
 
 ```text
 LeadPulse/

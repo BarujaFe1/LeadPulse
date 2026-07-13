@@ -25,8 +25,10 @@ describe("buildDashboard", () => {
     const demo = buildDashboard();
     expect(demo.total_leads).toBe(12);
     expect(demo.funnel).toHaveLength(6);
-    expect(demo.kpis.forgotten_leads).toBeGreaterThan(0);
-    expect(demo.kpis.at_risk_revenue).toBeGreaterThan(0);
+    expect(demo.kpis.forgotten_leads).toBe(7);
+    expect(demo.kpis.at_risk_revenue).toBe(15137);
+    expect(demo.kpis.median_first_response_minutes).toBe(34.5);
+    expect(demo.conversion_rate).toBe(33.3);
     expect(demo.weekly_highlights.some((h) => h.includes("motivo de perda"))).toBe(
       true,
     );

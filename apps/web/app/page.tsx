@@ -8,6 +8,7 @@ import { FunnelPanel } from "@/components/FunnelPanel";
 import { KpiGrid } from "@/components/KpiGrid";
 import { LostReasonsChart } from "@/components/LostReasonsChart";
 import { RiskLeads } from "@/components/RiskLeads";
+import { ScoringMethodology } from "@/components/ScoringMethodology";
 import { WeeklyReport } from "@/components/WeeklyReport";
 import { classifyMessage, fetchDemo } from "@/lib/api";
 import type { ClassifyResponse, DashboardSummary } from "@/types";
@@ -110,6 +111,10 @@ export default function HomePage() {
               classification={classification}
               error={classifyError}
             />
+          </section>
+
+          <section className="section-gap">
+            <ScoringMethodology />
           </section>
         </>
       ) : null}

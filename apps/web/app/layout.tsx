@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "LeadPulse Lab Demo",
     description:
       "WhatsApp-first follow-up cockpit with synthetic leads — response SLA, forgotten opportunities and opportunity score.",
-    url: "https://leadpulse-umber.vercel.app",
+    url: "https://leadpulse-two.vercel.app",
     siteName: "LeadPulse",
     type: "website",
   },

@@ -2,7 +2,7 @@
 
 ## Live demo
 
-- **URL:** https://leadpulse-umber.vercel.app  
+- **URL:** https://leadpulse-two.vercel.app  
 - **GitHub homepage:** same URL  
 - **Mode:** frontend-first lab (no FastAPI required)
 

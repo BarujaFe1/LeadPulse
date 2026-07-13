@@ -22,11 +22,11 @@ export function ClassifyPanel({
 }: Props) {
   return (
     <section className="panel classify" aria-labelledby="classify-title">
-      <h2 id="classify-title">Classificação leve de oportunidade</h2>
+      <h2 id="classify-title">Heurística de priorização (não é IA)</h2>
       <p className="muted">
-        Heurística transparente por intenção, canal e silêncio — útil para
-        priorizar sem scraping do WhatsApp. Não é modelo preditivo de crédito
-        ou decisão automática sobre pessoas.
+        Regras transparentes por intenção, canal e silêncio — para priorizar
+        retorno humano sem scraping do WhatsApp. Não é LLM, não é modelo
+        preditivo de crédito e não decide automaticamente sobre pessoas.
       </p>
       <label className="sr-only" htmlFor="lead-message">
         Mensagem do lead
@@ -38,7 +38,7 @@ export function ClassifyPanel({
         aria-label="Mensagem do lead"
       />
       <button type="button" onClick={onClassify} disabled={classifying || !message.trim()}>
-        {classifying ? "Classificando…" : "Classificar mensagem"}
+        {classifying ? "Aplicando regras…" : "Priorizar mensagem"}
       </button>
       {error ? (
         <p className="error" role="alert">
