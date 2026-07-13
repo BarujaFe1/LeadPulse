@@ -154,13 +154,42 @@ export function buildDashboard(leads: Lead[] = DEMO_LEADS): DashboardSummary {
     lost_reasons: lostReasons,
     top_risk_leads: risk,
     follow_ups: followUps.slice(0, 8),
-    weekly_highlights: [
-      `${forgotten.length} leads ativos sem retorno adequado (receita em risco R$ ${kpis.at_risk_revenue.toLocaleString("pt-BR")}).`,
-      `Mediana de 1ª resposta: ${Math.round(kpis.median_first_response_minutes)} min (p90 ${Math.round(kpis.p90_first_response_minutes)}).`,
-      `Conversão demo: ${conversion}% (${won.length} ganhos / ${closed} encerrados).`,
-      "Maior motivo de perda: demora no retorno — sinal clássico de follow-up frágil.",
-    ],
+    weekly_highlights: buildWeeklyHighlights({
+      forgottenCount: forgotten.length,
+      atRiskRevenue: kpis.at_risk_revenue,
+      medianFirstResponse: kpis.median_first_response_minutes,
+      p90FirstResponse: kpis.p90_first_response_minutes,
+      conversion,
+      wonCount: won.length,
+      closedCount: closed,
+      topLostReason: lostReasons[0]?.reason ?? null,
+    }),
   };
+}
+
+function buildWeeklyHighlights(input: {
+  forgottenCount: number;
+  atRiskRevenue: number;
+  medianFirstResponse: number;
+  p90FirstResponse: number;
+  conversion: number;
+  wonCount: number;
+  closedCount: number;
+  topLostReason: string | null;
+}): string[] {
+  const highlights = [
+    `${input.forgottenCount} leads ativos sem retorno adequado (receita em risco R$ ${input.atRiskRevenue.toLocaleString("pt-BR")}).`,
+    `Mediana de 1ª resposta: ${Math.round(input.medianFirstResponse)} min (p90 ${Math.round(input.p90FirstResponse)}).`,
+    `Conversão demo: ${input.conversion}% (${input.wonCount} ganhos / ${input.closedCount} encerrados).`,
+  ];
+  if (input.topLostReason) {
+    highlights.push(
+      `Maior motivo de perda (demo): ${input.topLostReason.replaceAll("_", " ")}.`,
+    );
+  } else {
+    highlights.push("Nenhum lead perdido no snapshot — foque em SLA de resposta.");
+  }
+  return highlights;
 }
 
 export function classifyMessageClient(payload: {
@@ -214,7 +243,11 @@ export function classifyMessageClient(payload: {
   if ((payload.hours_since_last_touch ?? 0) >= 24) {
     score += 10;
     rationale.push("Lead sem toque há 24h+ — risco de esquecimento.");
-    next_action = "Criar tarefa crítica de follow-up agora.";
+    // Do not overwrite a hot-intent action: silence raises urgency, but
+    // the recommended next step stays "reply now" when intent is hot.
+    if (temperature !== "hot") {
+      next_action = "Criar tarefa crítica de follow-up agora.";
+    }
   }
 
   const channel = payload.channel ?? "whatsapp";

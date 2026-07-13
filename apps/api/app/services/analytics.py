@@ -48,12 +48,12 @@ def row_to_lead(row: dict[str, str]) -> Lead:
         temperature=row["temperature"],  # type: ignore[arg-type]
         lost_reason=row.get("lost_reason") or None,
         notes=row.get("notes") or "",
-        tags=[t for t in (row.get("tags") or "").split(";") if t],
+        tags=[tag for tag in (row.get("tags") or "").split(";") if tag],
     )
 
 
 def load_leads() -> list[Lead]:
-    return [row_to_lead(r) for r in load_raw_rows()]
+    return [row_to_lead(row) for row in load_raw_rows()]
 
 
 def is_forgotten(lead: Lead) -> bool:
@@ -96,17 +96,51 @@ def build_follow_ups(leads: list[Lead]) -> list[FollowUpTask]:
             )
         )
     order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
-    return sorted(tasks, key=lambda t: (order[t.priority], t.due_at))
+    return sorted(tasks, key=lambda task: (order[task.priority], task.due_at))
+
+
+def _weekly_highlights(
+    *,
+    forgotten_count: int,
+    at_risk_revenue: float,
+    median_first_response: float,
+    p90_first_response: float,
+    conversion: float,
+    won_count: int,
+    closed_count: int,
+    top_lost_reason: str | None,
+) -> list[str]:
+    highlights = [
+        (
+            f"{forgotten_count} leads ativos sem retorno adequado "
+            f"(receita em risco R$ {at_risk_revenue:,.0f})."
+        ),
+        (
+            f"Mediana de 1ª resposta: {median_first_response:.0f} min "
+            f"(p90 {p90_first_response:.0f})."
+        ),
+        f"Conversão demo: {conversion}% ({won_count} ganhos / {closed_count} encerrados).",
+    ]
+    if top_lost_reason:
+        readable = top_lost_reason.replace("_", " ")
+        highlights.append(f"Maior motivo de perda (demo): {readable}.")
+    else:
+        highlights.append("Nenhum lead perdido no snapshot — foque em SLA de resposta.")
+    return highlights
 
 
 def build_dashboard() -> DashboardSummary:
     leads = load_leads()
-    active = [l for l in leads if l.stage in ACTIVE_STAGES]
-    won = [l for l in leads if l.stage == "won"]
-    lost = [l for l in leads if l.stage == "lost"]
-    responses = [l.first_response_minutes for l in leads if l.first_response_minutes is not None]
-    forgotten = [l for l in active if is_forgotten(l)]
-    hot = [l for l in active if l.temperature == "hot"]
+    active = [lead for lead in leads if lead.stage in ACTIVE_STAGES]
+    won = [lead for lead in leads if lead.stage == "won"]
+    lost = [lead for lead in leads if lead.stage == "lost"]
+    responses = [
+        lead.first_response_minutes
+        for lead in leads
+        if lead.first_response_minutes is not None
+    ]
+    forgotten = [lead for lead in active if is_forgotten(lead)]
+    hot = [lead for lead in active if lead.temperature == "hot"]
     follow_ups = build_follow_ups(leads)
 
     stage_order: list[Stage] = [
@@ -119,12 +153,12 @@ def build_dashboard() -> DashboardSummary:
     ]
     funnel: list[FunnelStage] = []
     for stage in stage_order:
-        bucket = [l for l in leads if l.stage == stage]
+        bucket = [lead for lead in leads if lead.stage == stage]
         funnel.append(
             FunnelStage(
                 stage=stage,
                 count=len(bucket),
-                revenue=round(sum(l.estimated_revenue for l in bucket), 2),
+                revenue=round(sum(lead.estimated_revenue for lead in bucket), 2),
             )
         )
 
@@ -144,8 +178,12 @@ def build_dashboard() -> DashboardSummary:
     ]
 
     risk = sorted(
-        [l for l in active if is_forgotten(l) or l.temperature == "hot"],
-        key=lambda l: (-l.opportunity_score, l.last_touch_at),
+        [
+            lead
+            for lead in active
+            if is_forgotten(lead) or lead.temperature == "hot"
+        ],
+        key=lambda lead: (-lead.opportunity_score, lead.last_touch_at),
     )[:5]
 
     closed = len(won) + len(lost)
@@ -160,19 +198,25 @@ def build_dashboard() -> DashboardSummary:
     kpis = ResponseKpi(
         median_first_response_minutes=float(median(responses)) if responses else 0.0,
         p90_first_response_minutes=p90,
-        unanswered_over_24h=len([l for l in active if l.first_response_minutes is None]),
+        unanswered_over_24h=len(
+            [lead for lead in active if lead.first_response_minutes is None]
+        ),
         forgotten_leads=len(forgotten),
         open_follow_ups=len(follow_ups),
         hot_leads=len(hot),
-        at_risk_revenue=round(sum(l.estimated_revenue for l in forgotten), 2),
+        at_risk_revenue=round(sum(lead.estimated_revenue for lead in forgotten), 2),
     )
 
-    highlights = [
-        f"{len(forgotten)} leads ativos sem retorno adequado (receita em risco R$ {kpis.at_risk_revenue:,.0f}).",
-        f"Mediana de 1ª resposta: {kpis.median_first_response_minutes:.0f} min (p90 {kpis.p90_first_response_minutes:.0f}).",
-        f"Conversão demo: {conversion}% ({len(won)} ganhos / {closed} encerrados).",
-        "Maior motivo de perda: demora no retorno — sinal clássico de follow-up frágil.",
-    ]
+    highlights = _weekly_highlights(
+        forgotten_count=len(forgotten),
+        at_risk_revenue=kpis.at_risk_revenue,
+        median_first_response=kpis.median_first_response_minutes,
+        p90_first_response=kpis.p90_first_response_minutes,
+        conversion=conversion,
+        won_count=len(won),
+        closed_count=closed,
+        top_lost_reason=lost_reasons[0].reason if lost_reasons else None,
+    )
 
     return DashboardSummary(
         total_leads=len(leads),
@@ -197,11 +241,19 @@ def classify_message(payload: ClassifyRequest) -> ClassifyResponse:
     stage: Stage = "contacted"
     next_action = "Registrar lead e agendar follow-up em 24h."
 
-    hot_terms = ["quero fechar", "hoje", "agora", "orçamento", "preço", "agendar", "visita"]
+    hot_terms = [
+        "quero fechar",
+        "hoje",
+        "agora",
+        "orçamento",
+        "preço",
+        "agendar",
+        "visita",
+    ]
     cold_terms = ["só pesquisando", "depois", "talvez", "não tenho pressa"]
     lost_terms = ["já fechei", "concorrente", "desisti"]
 
-    hits = [t for t in hot_terms if t in text]
+    hits = [term for term in hot_terms if term in text]
     if hits:
         score += 25
         rationale.append(f"Sinais de intenção: {', '.join(hits)}.")
@@ -209,13 +261,13 @@ def classify_message(payload: ClassifyRequest) -> ClassifyResponse:
         stage = "qualified"
         next_action = "Priorizar retorno humano em até 15 minutos."
 
-    if any(t in text for t in cold_terms):
+    if any(term in text for term in cold_terms):
         score -= 15
         temperature = "cold"
         rationale.append("Linguagem de baixa urgência detectada.")
         next_action = "Nutrir com valor e remarcar contato em 3 dias."
 
-    if any(t in text for t in lost_terms):
+    if any(term in text for term in lost_terms):
         score = min(score, 25)
         stage = "lost"
         temperature = "cold"
@@ -225,7 +277,9 @@ def classify_message(payload: ClassifyRequest) -> ClassifyResponse:
     if payload.hours_since_last_touch >= 24:
         score += 10
         rationale.append("Lead sem toque há 24h+ — risco de esquecimento.")
-        next_action = "Criar tarefa crítica de follow-up agora."
+        # Keep hot-intent action; silence only raises score/rationale.
+        if temperature != "hot":
+            next_action = "Criar tarefa crítica de follow-up agora."
 
     if payload.channel in {"whatsapp", "instagram"}:
         score += 5
@@ -233,7 +287,9 @@ def classify_message(payload: ClassifyRequest) -> ClassifyResponse:
 
     score = max(0, min(100, score))
     if not rationale:
-        rationale.append("Classificação heurística sem sinais fortes — revisar manualmente.")
+        rationale.append(
+            "Classificação heurística sem sinais fortes — revisar manualmente."
+        )
 
     return ClassifyResponse(
         temperature=temperature,  # type: ignore[arg-type]
@@ -246,8 +302,8 @@ def classify_message(payload: ClassifyRequest) -> ClassifyResponse:
 
 def import_preview() -> ImportPreview:
     leads = load_leads()
-    channels = Counter(l.channel for l in leads)
-    stages = Counter(l.stage for l in leads)
+    channels = Counter(lead.channel for lead in leads)
+    stages = Counter(lead.stage for lead in leads)
     return ImportPreview(
         rows_ingested=len(leads),
         rows_valid=len(leads),

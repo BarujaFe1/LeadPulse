@@ -12,15 +12,15 @@ router = APIRouter(tags=["leads"])
 def list_leads(stage: str | None = None, temperature: str | None = None) -> list[Lead]:
     leads = load_leads()
     if stage:
-        leads = [l for l in leads if l.stage == stage]
+        leads = [lead for lead in leads if lead.stage == stage]
     if temperature:
-        leads = [l for l in leads if l.temperature == temperature]
-    return sorted(leads, key=lambda l: (-l.opportunity_score, l.last_touch_at))
+        leads = [lead for lead in leads if lead.temperature == temperature]
+    return sorted(leads, key=lambda lead: (-lead.opportunity_score, lead.last_touch_at))
 
 
 @router.get("/leads/forgotten", response_model=list[Lead])
 def forgotten_leads() -> list[Lead]:
-    return [l for l in load_leads() if is_forgotten(l)]
+    return [lead for lead in load_leads() if is_forgotten(lead)]
 
 
 @router.get("/leads/{lead_id}", response_model=Lead)
